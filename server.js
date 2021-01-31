@@ -33,7 +33,7 @@ app.get("/api/notes", async function(req, res) {
         notes = JSON.parse(res);
         return notes;
     })
-    .catch(err => err ? console.error(err) : console.log("Post Successful!"));
+    .catch(err => err ? console.error(err) : console.log("Successful!"));
     res.json(notes);
 });
 
@@ -50,7 +50,7 @@ app.post("/api/notes", async function(req, res) {
         notes = JSON.parse(res);
         notes.push(newNote);
         data = JSON.stringify(notes);
-        fs.writeFile(__dirname + "/db/db.json", data, err => err ? console.error(err) : console.log("New notes written successfully!"));
+        fs.writeFile(__dirname + "/db/db.json", data, err => err ? console.error(err) : console.log("New note added successfully!"));
     })
     .catch(err => err ? console.error(err) : console.log("Post Successful!"));
     res.json(newNote);
@@ -71,7 +71,7 @@ app.delete("/api/notes/:id", async function(req, res) {
     notes.splice(noteIndex, 1);
     // write notes to db.json
     data = JSON.stringify(notes);
-    fs.writeFile(__dirname + "/db/db.json", data, err => err ? console.error(err) : console.log("Success!"));
+    fs.writeFile(__dirname + "/db/db.json", data, err => err ? console.error(err) : console.log("Note Deleted!"));
     })
     .catch(err => err ? console.error(err) : console.log("Get Note to Delete Successful!"));
     res.json(notes)
