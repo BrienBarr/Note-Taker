@@ -10,7 +10,7 @@ var PORT = process.env.PORT || 8080;
 
 var readFileAsync = util.promisify(fs.readFile);
 
-function getNotes(){
+function readNotes(){
 
     return readFileAsync(__dirname + "/db/db.json", "utf8");
 
@@ -26,7 +26,7 @@ app.get("/notes", function(req, res) {
 
 app.get("/api/notes", async function(req, res) {
     var notes = [];
-    await getNotes()
+    await readNotes()
     .then(function(res){
         notes = JSON.parse(res);
         return notes;
@@ -41,7 +41,7 @@ app.get("*", function(req, res) {
 
 app.post("/api/notes", async function(req, res) {
     var newNote = req.body;
-    await getNotes()
+    await readNotes()
     .then(function(res){
         notes = JSON.parse(res);
         notes.push(newNote);
@@ -55,7 +55,7 @@ app.post("/api/notes", async function(req, res) {
 app.delete("/api/notes/:id", async function(req, res) {
     console.log(req.params.id);
     var noteID = req.params.id;
-    await getNotes()
+    await readNotes()
     .then(function(res){
     notes = JSON.parse(res);
     console.log(notes);
