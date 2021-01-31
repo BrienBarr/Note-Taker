@@ -52,6 +52,31 @@ app.post("/api/notes", async function(req, res) {
     res.json(newNote);
 });
 
+app.delete("/api/notes/:id", async function(req, res) {
+    console.log(req.params.id);
+    var noteID = req.params.id;
+    await getNotes()
+    .then(function(res){
+    notes = JSON.parse(res);
+    console.log(notes);
+    // find noteID in notes
+    for(i = 0; i < notes.length; i++){
+        if (notes[i].id === noteID){
+            var noteIndex = i;
+            console.log(noteIndex);
+        }
+    }
+    // delete noteID
+    notes.splice(noteIndex, 1);
+    console.log(notes);
+    // write notes to db.json
+    data = JSON.stringify(notes);
+    fs.writeFile(__dirname + "/db/db.json", data, err => err ? console.error(err) : console.log("Success!"));
+    })
+    .catch(err => err ? console.error(err) : console.log("Get Note to Delete Successful!"));
+    res.json(notes)
+});
+
 app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
 });
