@@ -8,6 +8,8 @@ var app = express();
 
 var PORT = process.env.PORT || 8080;
 
+app.use(express.static(__dirname + '/public'));
+
 var readFileAsync = util.promisify(fs.readFile);
 
 function readNotes(){
