@@ -6,26 +6,30 @@ var path = require("path");
 var util = require("util");
 var app = express();
 
+// Declare the port to use
 var PORT = process.env.PORT || 8080;
 
+// Set the static route to serve public files
 app.use(express.static(__dirname + '/public'));
 
+// Promisify the fs.readFile method
 var readFileAsync = util.promisify(fs.readFile);
 
+// Function to read the notes in the db.json file
 function readNotes(){
-
     return readFileAsync(__dirname + "/db/db.json", "utf8");
-
 };
 
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// Set the route to serve the notes.html file to the client
 app.get("/notes", function(req, res) {
     res.sendFile(path.join(__dirname, "/public/notes.html"));
 });
 
+// Set the route to get notes from the db.json file and return to the client
 app.get("/api/notes", async function(req, res) {
     var notes = [];
     await readNotes()
@@ -37,10 +41,12 @@ app.get("/api/notes", async function(req, res) {
     res.json(notes);
 });
 
+// Set the route to serve the index.html file to the client
 app.get("*", function(req, res) {
     res.sendFile(path.join(__dirname, "/public/index.html"));
 });
 
+// Set the route for the client to post a new note and save it to the db.json file
 app.post("/api/notes", async function(req, res) {
     var newNote = req.body;
     var newNoteID = req.body.title;
@@ -56,6 +62,7 @@ app.post("/api/notes", async function(req, res) {
     res.json(newNote);
 });
 
+// Set the route for the client to delete a note from the db.json file
 app.delete("/api/notes/:id", async function(req, res) {
     var noteID = req.params.id;
     await readNotes()
@@ -77,6 +84,7 @@ app.delete("/api/notes/:id", async function(req, res) {
     res.json(notes)
 });
 
+// Start the server listening on the port
 app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
 });
