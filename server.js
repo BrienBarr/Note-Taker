@@ -1,10 +1,11 @@
 // Dependencies
 // =============================================================
-var express = require("express");
-var fs = require("fs");
-var path = require("path");
-var util = require("util");
-var app = express();
+const express = require("express");
+const fs = require("fs");
+const path = require("path");
+const util = require("util");
+const app = express();
+const crypto = require("crypto");
 
 // Declare the port to use
 var PORT = process.env.PORT || 8080;
@@ -49,11 +50,18 @@ app.get("*", function(req, res) {
 // Set the route for the client to post a new note and save it to the db.json file
 app.post("/api/notes", async function(req, res) {
     var newNote = req.body;
-    var newNoteID = req.body.title;
-    newNote.id = newNoteID;
     await readNotes()
     .then(function(res){
         notes = JSON.parse(res);
+        var newNoteID = crypto.randomBytes(8).toString("hex");
+        // Check to see if any saved note has the same id as the one generated for the new note
+        // and generate a new id for the new note if any note has that id
+        for (i = 0; i < notes.length; i++){
+            if (notes[i].id === newNoteID){
+                newNoteID = crypto.randomBytes(8).toString("hex");
+            }
+        }
+        newNote.id = newNoteID;
         notes.push(newNote);
         data = JSON.stringify(notes);
         fs.writeFile(__dirname + "/db/db.json", data, err => err ? console.error(err) : console.log("New note added successfully!"));
