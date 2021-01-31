@@ -63,7 +63,7 @@ app.post("/api/notes", async function(req, res) {
         }
         newNote.id = newNoteID;
         notes.push(newNote);
-        data = JSON.stringify(notes);
+        data = JSON.stringify(notes, null, 2);
         fs.writeFile(__dirname + "/db/db.json", data, err => err ? console.error(err) : console.log("New note added successfully!"));
     })
     .catch(err => err ? console.error(err) : console.log("Post Successful!"));
@@ -85,7 +85,7 @@ app.delete("/api/notes/:id", async function(req, res) {
     // delete noteID
     notes.splice(noteIndex, 1);
     // write notes to db.json
-    data = JSON.stringify(notes);
+    data = JSON.stringify(notes, null, 2);
     fs.writeFile(__dirname + "/db/db.json", data, err => err ? console.error(err) : console.log("Note Deleted!"));
     })
     .catch(err => err ? console.error(err) : console.log("Get Note to Delete Successful!"));
